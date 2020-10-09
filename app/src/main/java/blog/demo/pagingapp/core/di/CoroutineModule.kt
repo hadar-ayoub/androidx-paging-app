@@ -3,32 +3,24 @@ package blog.demo.pagingapp.core.di
 import blog.demo.pagingapp.core.di.coroutines.*
 import dagger.Module
 import dagger.Provides
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 
 @Module
-class CoroutineModule {
-
+class CoroutinesModule {
+    @DefaultDispatcher
     @Provides
-    @MainCoroutineScope
-    fun provideMainCoroutineScope(): CoroutineScope = CoroutineScope(Job() + Dispatchers.Main)
+    fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 
+    @IoDispatcher
     @Provides
-    @DefaultCoroutineScope
-    fun provideDefaultCoroutineScope(): CoroutineScope = CoroutineScope(Job() + Dispatchers.Default)
+    fun providesIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
 
+    @MainDispatcher
     @Provides
-    @IOCoroutineScope
-    fun provideIOCoroutineScope(): CoroutineScope = CoroutineScope(Job() + Dispatchers.IO)
+    fun providesMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
 
+    @MainImmediateDispatcher
     @Provides
-    @UnconfinedCoroutineScope
-    fun provideUnconfinedCoroutineScope(): CoroutineScope =
-        CoroutineScope(Job() + Dispatchers.Unconfined)
-
-    @Provides
-    @MainImmediateCoroutineScope
-    fun provideMainImmediateCoroutineScope(): CoroutineScope =
-        CoroutineScope(Job() + Dispatchers.Main.immediate)
+    fun providesMainImmediateDispatcher(): CoroutineDispatcher = Dispatchers.Main.immediate
 }

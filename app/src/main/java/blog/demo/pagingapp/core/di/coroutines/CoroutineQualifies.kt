@@ -3,16 +3,13 @@ package blog.demo.pagingapp.core.di.coroutines
 import javax.inject.Qualifier
 
 @Qualifier
-annotation class DefaultCoroutineScope
+annotation class DefaultDispatcher
 
 @Qualifier
-annotation class MainCoroutineScope
+annotation class MainDispatcher
 
 @Qualifier
-annotation class IOCoroutineScope
+annotation class IoDispatcher
 
 @Qualifier
-annotation class MainImmediateCoroutineScope
-
-@Qualifier
-annotation class UnconfinedCoroutineScope
+annotation class MainImmediateDispatcher

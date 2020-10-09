@@ -1,69 +1,57 @@
 package blog.demo.pagingapp.domain.usecases
 
-import androidx.paging.PageKeyedDataSource
-import blog.demo.pagingapp.core.di.coroutines.IOCoroutineScope
+import blog.demo.pagingapp.R
+import blog.demo.pagingapp.core.di.coroutines.IoDispatcher
 import blog.demo.pagingapp.core.io.DataResult
+import blog.demo.pagingapp.core.io.Result
 import blog.demo.pagingapp.data.repositories.MoviesRepository
 import blog.demo.pagingapp.domain.entities.Movie
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import blog.demo.pagingapp.domain.entities.MoviesPage
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class MoviesUseCase @Inject constructor(
-    @IOCoroutineScope private val coroutineScope: CoroutineScope,
-    private val moviesRepository: MoviesRepository
+    private val moviesRepository: MoviesRepository,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
-    companion object{
+
+    companion object {
         const val PAGE_SIZE = 10
     }
-    fun build(searchedText: String): PageKeyedDataSource<Int, Movie> =
-        object : PageKeyedDataSource<Int, Movie>() {
-            override fun loadInitial(
-                params: LoadInitialParams<Int>,
-                callback: LoadInitialCallback<Int, Movie>
-            ) {
-                getInitialMovies(searchedText, callback)
-            }
 
-            override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Movie>) {
-                getMoreMovies(searchedText, params.key, params.key + 1, callback)
-            }
-
-            override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Movie>) {
-                getMoreMovies(searchedText, params.key, params.key - 1, callback)
+    suspend fun getInitialMovies(searchedText: String): Result<Pair<Boolean, List<Movie>>> =
+        withContext(dispatcher) {
+            when (val dataResult = moviesRepository.fetchMovies(searchedText, 1)) {
+                is DataResult.Success -> {
+                    Result.Success(Pair(isLastPage(dataResult.data), dataResult.data.movies))
+                }
+                is DataResult.Failure -> {
+                    Result.Failure<Pair<Boolean, List<Movie>>>(R.string.default_error)
+                }
             }
         }
 
-    private fun getInitialMovies(
+    suspend fun getMoreMovies(
         searchedText: String,
-        callback: PageKeyedDataSource.LoadInitialCallback<Int, Movie>
-    ) {
-        coroutineScope.launch {
-            when (val result = moviesRepository.fetchMovies(searchedText, 1)) {
+        page: Int
+    ): Result<Pair<Boolean, List<Movie>>> {
+        return withContext(dispatcher) {
+            when (val dataResult = moviesRepository.fetchMovies(searchedText, page)) {
                 is DataResult.Success -> {
-                    callback.onResult(result.data.movies, null, 2)
+                    Result.Success(
+                        Pair(
+                            isLastPage(dataResult.data) || page == 1,
+                            dataResult.data.movies
+                        )
+                    )
                 }
                 is DataResult.Failure -> {
+                    Result.Failure<Pair<Boolean, List<Movie>>>(R.string.default_error)
                 }
             }
         }
     }
 
-    private fun getMoreMovies(
-        searchedText: String,
-        page: Int,
-        adjacentPage: Int,
-        callback: PageKeyedDataSource.LoadCallback<Int, Movie>
-    ) {
-        coroutineScope.launch {
-            when (val result = moviesRepository.fetchMovies(searchedText, page)) {
-                is DataResult.Success -> {
-                    val lastFetch = PAGE_SIZE * result.data.page >= result.data.totalResult
-                    callback.onResult(result.data.movies, if(!lastFetch) adjacentPage else null)
-                }
-                is DataResult.Failure -> {
-                }
-            }
-        }
-    }
+    private fun isLastPage(data: MoviesPage): Boolean = PAGE_SIZE * data.page >= data.totalResult
 }
