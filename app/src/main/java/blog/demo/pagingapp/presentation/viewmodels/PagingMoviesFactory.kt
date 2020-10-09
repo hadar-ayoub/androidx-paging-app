@@ -8,15 +8,13 @@ import blog.demo.pagingapp.domain.usecases.MoviesUseCase
 
 
 class PagingMoviesFactory constructor(
-    private val moviesUseCase: MoviesUseCase,
-    private val searchedText: String
+    private val pageKeyedDataSource: PageKeyedDataSource<Int, Movie>
 ) : DataSource.Factory<Int, Movie>() {
     private val sourceLiveData = MutableLiveData<PageKeyedDataSource<Int, Movie>>()
 
     override fun create(): DataSource<Int, Movie> {
-        val pagingUseCase = moviesUseCase.build(searchedText)
-        sourceLiveData.postValue(pagingUseCase)
-        return pagingUseCase
+        sourceLiveData.postValue(pageKeyedDataSource)
+        return pageKeyedDataSource
     }
 
     fun reset() {

@@ -23,7 +23,6 @@ open class MoviesListAdapter(private val activity: ListActivity) :
         getItem(position)?.let {
             Glide.with(activity)
                 .load(it.pictureUrl)
-                .placeholder(R.drawable.ic_image_not_found)
                 .error(R.drawable.ic_image_not_found)
                 .into(holder.imageView)
 
@@ -45,7 +44,5 @@ open class MoviesListAdapter(private val activity: ListActivity) :
                     && oldItem.year == newItem.year
                     && oldItem.type == newItem.type
         }
-
     }
-
 }
