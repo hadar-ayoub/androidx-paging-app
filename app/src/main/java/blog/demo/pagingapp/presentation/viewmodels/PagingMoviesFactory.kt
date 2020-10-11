@@ -16,8 +16,4 @@ class PagingMoviesFactory constructor(
         sourceLiveData.postValue(pageKeyedDataSource)
         return pageKeyedDataSource
     }
-
-    fun reset() {
-        sourceLiveData.value?.invalidate()
-    }
 }

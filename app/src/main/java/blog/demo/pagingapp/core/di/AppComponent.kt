@@ -1,7 +1,6 @@
 package blog.demo.pagingapp.core.di
 
 import blog.demo.pagingapp.core.App
-import blog.demo.pagingapp.presentation.ui.ListActivity
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -13,9 +12,9 @@ import javax.inject.Singleton
     modules = [
         AndroidInjectionModule::class,
         AppModule::class,
-        CoroutineModule::class,
+        CoroutinesModule::class,
         OmdbApiModule::class,
-        ListActivityModule::class
+        ListFragmentModule::class
     ]
 )
 interface AppComponent : AndroidInjector<App> {

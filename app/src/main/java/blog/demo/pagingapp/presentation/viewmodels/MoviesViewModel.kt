@@ -17,13 +17,9 @@ val moviesPagingConfig = Config(
 class MoviesViewModel @Inject constructor(
     private val moviesUseCase: MoviesUseCase
 ) : ViewModel() {
-    private lateinit var pagingMoviesFactory: PagingMoviesFactory
 
-    fun getMovies(keyword: String) : LiveData<PagedList<Movie>>{
-        val pagedKeyedDataSource = PagingDataSource(keyword, viewModelScope, moviesUseCase)
-        pagingMoviesFactory = PagingMoviesFactory(pagedKeyedDataSource)
-        return pagingMoviesFactory.toLiveData(moviesPagingConfig)
+    internal fun getMovies(keyword: CharSequence?) : LiveData<PagedList<Movie>>{
+        val pagedKeyedDataSource = PagingDataSource(keyword.toString(), viewModelScope, moviesUseCase)
+        return PagingMoviesFactory(pagedKeyedDataSource).toLiveData(moviesPagingConfig)
     }
-
-    fun refresh() = pagingMoviesFactory.reset()
 }
