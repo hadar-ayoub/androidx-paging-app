@@ -2,7 +2,6 @@ package blog.demo.pagingapp.core.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import blog.demo.pagingapp.presentation.ui.ListActivity
 import blog.demo.pagingapp.presentation.viewmodels.MoviesViewModel
 import blog.demo.pagingapp.presentation.viewmodels.ViewModelFactory
 import dagger.Binds

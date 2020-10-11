@@ -1,9 +1,13 @@
 package blog.demo.pagingapp.presentation.ui
 
 import android.os.Bundle
+import android.widget.FrameLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -17,34 +21,17 @@ import dagger.android.AndroidInjection
 import javax.inject.Inject
 
 
-class ListActivity : AppCompatActivity() {
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel: MoviesViewModel by viewModels { viewModelFactory }
-
-    private lateinit var moviesListAdapter: MoviesListAdapter
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AndroidInjection.inject(this)
         setContentView(R.layout.activity_item_list)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         toolbar.title = title
-        moviesListAdapter = MoviesListAdapter(this)
 
-        viewModel.getMovies("super").observe(this, Observer {
-            moviesListAdapter.submitList(it)
-        })
-
-        findViewById<RecyclerView>(R.id.item_list)?.let {
-            val dividerItemDecoration = DividerItemDecoration(
-                it.context, LinearLayoutManager.VERTICAL
-            )
-            it.addItemDecoration(dividerItemDecoration)
-            it.adapter = moviesListAdapter
+        supportFragmentManager.commit {
+            add(R.id.frameLayout, ListFragment())
         }
     }
 }
