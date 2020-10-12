@@ -1,5 +1,11 @@
-# androidx_paging_app
+# androidx paging app for api data
 
-Androidx Paging library Sample from api data above clean architecture project using kotlin, Livedata, MVVM, coroutine, dagger 2.27 &amp; retrofit2
+Androidx Paging library Sample from api data above clean architecture project using : 
 
-## Movies API : [OMDB](http://www.omdbapi.com)
+* kotlin
+* ViewModels & Livedata
+* Coroutines
+* Android KTX
+* dagger 2.27
+* retrofit2
+* Movies API : [OMDB](http://www.omdbapi.com)
