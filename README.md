@@ -8,5 +8,4 @@ Androidx Paging library Sample from api data above clean architecture project us
 * Android KTX
 * dagger 2.27
 * retrofit2
-
-## Movies API : [OMDB](http://www.omdbapi.com)
+* Movies API : [OMDB](http://www.omdbapi.com)
