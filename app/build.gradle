@@ -29,7 +29,7 @@ android {
 
   buildTypes {
     debug{
-      // debug configs
+      buildConfigField "String", "API_KEY", API_KEY
     }
     release {
       minifyEnabled false

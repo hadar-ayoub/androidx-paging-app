@@ -1,6 +1,7 @@
 package blog.demo.pagingapp.data.repositories
 
 import android.util.Log
+import blog.demo.pagingapp.BuildConfig
 import blog.demo.pagingapp.core.io.DataResult
 import blog.demo.pagingapp.data.services.OmdbApi
 import blog.demo.pagingapp.domain.entities.Movie
@@ -11,14 +12,11 @@ import javax.inject.Inject
 
 class MoviesRepository @Inject constructor(private val omdbService: OmdbApi) {
 
-    companion object {
-        const val API_KEY = "cead85ef"
-    }
 
     suspend fun fetchMovies(searchedText: String, page: Int): DataResult<MoviesPage> {
         return try {
             val response = omdbService.fetchMovies(
-                API_KEY, page.toString(),
+                BuildConfig.API_KEY, page.toString(),
                 searchedText
             )
             when {
